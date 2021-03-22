@@ -1,0 +1,10 @@
+---
+- hosts: server
+  become: yes
+
+  tasks:
+    - name: docker compose down
+      docker_compose:
+        project_src: /project/docker
+        state: absent
+        project_name: pullrequestwatcher

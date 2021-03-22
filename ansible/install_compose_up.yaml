@@ -1,0 +1,24 @@
+---
+- hosts: server
+  become: yes
+  vars:
+    pip_install_packages:
+      - name: docker
+        version: 4.4.4
+      - name: docker-compose
+        version: 1.28.5
+  roles:
+    - geerlingguy.pip
+    - geerlingguy.docker
+
+  tasks:
+    - name: copy project files
+      copy:
+        src: ../docker
+        dest: /project
+    - name: docker compose up
+      docker_compose:
+        project_src: /project/docker
+        build: yes
+        recreate: always
+        project_name: pullrequestwatcher

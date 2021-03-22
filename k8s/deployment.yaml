@@ -1,0 +1,42 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: prwatcher
+  name: pullrequestwatcher
+spec:
+  replicas: 1
+  selector:
+    macthLabels:
+      app: prwatcher
+    template:
+      metadata:
+        labels:
+          app: prwatcher
+      spec:
+        containers:
+          - name: pullrequestwatcher
+            image: ourrepository/ourimage:version
+            env:
+              - name: GITHUB_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: github_token
+                    key: token
+              - name: SLACK_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: slack_token
+                    key: token
+              - name: GITHUB_REPOSITORY
+                value: repo_to_watch
+              - name: THRESHOLD
+                value: 3
+              - name: SLACK_CHANNEL
+                value: slack_channel_to_nofify
+              - name: SLEEP_INTERVAL
+                value: 3600
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        nodeSelector:
+          type: pr-monitor-node

@@ -1,0 +1,11 @@
+---
+- hosts: server
+  become: yes
+
+  tasks:
+    - name: docker compose up
+      docker_compose:
+        project_src: /project/docker
+        build: yes
+        recreate: always
+        project_name: pullrequestwatcher
